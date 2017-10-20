@@ -1,41 +1,75 @@
-## 软件工程(3) - 微信抢票实战
+软件工程（3） - 微信抢票实战
 
-### 服务器部署
+目录
 
-Ready to fix the content here.
+- 环境准备
+  - 服务器部署
+  - 程序环境
+  - Git项目
+- 初识原理
+  - Handler和Wrapper
+  - Views
+- 接口实现
+  - 管理员界面
+  - 用户界面
+  - 微信菜单
 
-You can use the [editor on GitHub](https://github.com/PWrau/WeChatTicket/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
-### Markdown
+环境准备
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+服务器部署
 
-```markdown
-Syntax highlighted code block
+首先感谢腾讯爸爸的服务器~
 
-# Header 1
-## Header 2
-### Header 3
+系统是ubuntu 16纯通过控制台操作，实现下来确实了解了好多终端操作的知识！个人认为MobaXterm这一款终端比较好用，安利一下
 
-- Bulleted
-- List
 
-1. Numbered
-2. List
 
-**Bold** and _Italic_ and `Code` text
+部署流程是参考这一篇著名博客完成的，推荐大家阅读How to setup my first server
 
-[Link](url) and ![Image](src)
-```
+程序环境
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+使用venv虚拟环境，python版本是3.5（必须是3.5，因为3.6版本对于框架中的部分代码不支持），框架是Django项目。
 
-### Jekyll Themes
+在本地我们使用PyCharm进行代码的编辑（因为专门支持python以及Django项目的IDE对于代码补全、调试和框架等都有很好的支持），此外PyCharm提供直接与服务器通信传输文件的方式，使同步代码简单了很多。在Tools -> Deployment -> Configuration内进行服务器连接的配置即可。
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/PWrau/WeChatTicket/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+Git项目
 
-### Support or Contact
+该项目使用Gitlab进行项目管理，项目地址为gitlab/WeChatTicket。主要在dev_sgy分支上进行开发和一些同步，总体上还是有一棵比较漂亮的分支树！
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+
+
+---
+
+初始原理
+
+Handler和Wrapper
+
+项目的结构是这样的：
+
+
+
+其中wechat、userpage、adminpage是项目下的3个app，在wechat中是微信显示出的界面及其逻辑层。在类CustomWeChatView中，handler的列表如下所示：
+
+    handlers = [
+            BookHandler,
+            HelpOrSubscribeHandler,
+            FormulaHandler,
+            UnbindOrUnsubscribeHandler,
+            QuitBookHandler,
+            BindAccountHandler,
+            ActivityListHandler,
+            TicketListHandler,
+            BookEmptyHandler,
+        ]
+
+而每个Handler都需要实现两个方法
+
+    class BookHandler(WeChatHandler):
+      def check(self):
+        # ...
+      def handle(self):
+        # ...
+
+即，按顺序查找Handler，如果它的chheck()方法返回真，就相当于进入其分支，并执行handle()方法来进行操作，也不会进入其他分支。
