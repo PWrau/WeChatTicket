@@ -19,7 +19,7 @@
 
 系统是ubuntu 16纯通过控制台操作，实现下来确实了解了好多终端操作的知识！个人认为MobaXterm这一款终端比较好用，安利一下
 
-![mobaXterm](E:\Work\2017Autumn\SoftwareEngineering\LiuQiang\抢票实战\mobax.png)
+![mobaXterm](.\image\mobax.png)
 
 部署流程是参考这一篇著名博客完成的，推荐大家阅读How to setup my first server
 
@@ -33,7 +33,7 @@
 
 该项目使用Gitlab进行项目管理，项目地址为gitlab/WeChatTicket。主要在`dev_sgy`分支上进行开发和一些同步，总体上还是有一棵比较漂亮的分支树！
 
-![gitlabbranch](E:\Work\2017Autumn\SoftwareEngineering\LiuQiang\抢票实战\branch.png)
+![mobaXterm](.\image\branch.png)
 
 ---
 
@@ -43,7 +43,7 @@
 
 项目的结构是这样的：
 
-![structure](E:\Work\2017Autumn\SoftwareEngineering\LiuQiang\抢票实战\struc.png)
+![mobaXterm](.\image\struc.png)
 
 其中wechat、userpage、adminpage是项目下的3个app，在wechat中是微信显示出的界面及其逻辑层。在类`CustomWeChatView`中，handler的列表如下所示：
 
@@ -96,7 +96,7 @@ python有自带的一些装饰器，如Django支持便捷的用户登录状态�
 但是对于这个项目中的view类，它的user并不直接存在与成员中，而是传输的一个参数，这样原生的装饰器就不能使用。经过研究我编写了自己的装饰器：
 
     def m_login_required(view):
-    
+
         def wrapper(*args, **kargs):
             if not args[0].request.user.is_authenticated():
                 raise LogicError('User not online.')
