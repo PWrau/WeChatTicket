@@ -33,7 +33,7 @@
 
 该项目使用Gitlab进行项目管理，项目地址为gitlab/WeChatTicket。主要在`dev_sgy`分支上进行开发和一些同步，总体上还是有一棵比较漂亮的分支树！
 
-![mobaXterm](.\image\branch.png)
+![branch](.\image\branch.png)
 
 ---
 
@@ -43,7 +43,7 @@
 
 项目的结构是这样的：
 
-![mobaXterm](.\image\struc.png)
+![structure](.\image\struc.png)
 
 其中wechat、userpage、adminpage是项目下的3个app，在wechat中是微信显示出的界面及其逻辑层。在类`CustomWeChatView`中，handler的列表如下所示：
 
