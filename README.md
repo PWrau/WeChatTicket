@@ -9,6 +9,7 @@
 - 初识原理
   - Handler和Wrapper
   - Views
+- 其他值得说的地方
 
 ### 环境准备
 
@@ -30,7 +31,7 @@
 
 #### Git项目
 
-该项目使用Gitlab进行项目管理，项目地址为gitlab/WeChatTicket。主要在dev_sgy分支上进行开发和一些同步，总体上还是有一棵比较漂亮的分支树！
+该项目使用Gitlab进行项目管理，项目地址为gitlab/WeChatTicket。主要在`dev_sgy`分支上进行开发和一些同步，总体上还是有一棵比较漂亮的分支树！
 
 ![gitlabbranch](E:\Work\2017Autumn\SoftwareEngineering\LiuQiang\抢票实战\branch.png)
 
@@ -44,7 +45,7 @@
 
 ![structure](E:\Work\2017Autumn\SoftwareEngineering\LiuQiang\抢票实战\struc.png)
 
-其中wechat、userpage、adminpage是项目下的3个app，在wechat中是微信显示出的界面及其逻辑层。在类CustomWeChatView中，handler的列表如下所示：
+其中wechat、userpage、adminpage是项目下的3个app，在wechat中是微信显示出的界面及其逻辑层。在类`CustomWeChatView`中，handler的列表如下所示：
 
     handlers = [
             BookHandler,
@@ -66,7 +67,7 @@
       def handle(self):
         # ...
 
-即，按顺序查找Handler，如果它的chheck()方法返回真，就相当于进入其分支，并执行handle()方法来进行操作，也不会进入其他分支。
+即，按顺序查找Handler，如果它的`check()`方法返回真，就相当于进入其分支，并执行`handle()`方法来进行操作，也不会进入其他分支。
 
 #### Views
 
@@ -82,4 +83,26 @@
 
     url(r'^login/?$', AdminLogin.as_view())
 
-程序已经提供了self.input[]作为传输数据的接口，利用这个接口就可以执行逻辑操作。
+程序已经提供了`self.input[]`作为传输数据的接口，利用这个接口就可以执行逻辑操作。
+
+### 其他值得说的地方
+
+#### 装饰器
+
+python有自带的一些装饰器，如Django支持便捷的用户登录状态检测
+
+    @login_required
+
+但是对于这个项目中的view类，它的user并不直接存在与成员中，而是传输的一个参数，这样原生的装饰器就不能使用。经过研究我编写了自己的装饰器：
+
+    def m_login_required(view):
+    
+        def wrapper(*args, **kargs):
+            if not args[0].request.user.is_authenticated():
+                raise LogicError('User not online.')
+            return view(args[0], **kargs)
+    
+        return wrapper
+
+由于user包含于`view.request.user`中，而又利用了成员方法的第一个参数为`self` ，使用这种方式来实现装饰器。装饰器的原理就是为目标函数包裹一个外壳，在其之外再绑定其他的一些代码段。
+
